@@ -2,6 +2,7 @@
   <h3>User logged in</h3>
   <p>User name: {{ user.name }}</p>
   <p>Data: {{ data }}</p>
+  <p>Reverse Data: {{ data | reverse }}</p>
 </div>
 <div *ngIf="!isLoggedIn">
   <h3>User not logged in</h3>
