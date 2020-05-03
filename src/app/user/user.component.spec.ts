@@ -9,7 +9,6 @@ import {
 import { UserComponent } from './user.component';
 import { UserService } from './user.service';
 import { DataService } from '../shared/data.service';
-import { ReversePipe } from '../shared/reverse.pipe';
 
 describe('UserComponent', () => {
   let component: UserComponent;
@@ -17,7 +16,7 @@ describe('UserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UserComponent, ReversePipe],
+      declarations: [UserComponent],
     }).compileComponents();
   }));
 
@@ -32,8 +31,9 @@ describe('UserComponent', () => {
   });
 
   it('should use the username of service', () => {
-    const service = fixture.debugElement.injector.get(UserService);
-    expect(component.user.name).toEqual(service.user.name);
+    const userService = fixture.debugElement.injector.get(UserService);
+    fixture.detectChanges();
+    expect(component.user.name).toEqual(userService.user.name);
   });
 
   it('should display username if user is logged in', () => {
@@ -57,32 +57,36 @@ describe('UserComponent', () => {
   it('SpyOn1: shouldn"t fetch data if not called asyncronously', () => {
     const dataService = fixture.debugElement.injector.get(DataService);
     const spy = spyOn(dataService, 'getDetails').and.returnValue(
-      Promise.resolve('Data')
+      Promise.resolve('Test Data')
     );
     fixture.detectChanges();
     expect(component.data).toBeUndefined();
   });
 
-  it('SpyOn2: should fetch data successfully if called asyncronously', async(() => {
-    const dataService = fixture.debugElement.injector.get(DataService);
+  it('SpyOn2: should fetch data successfully if called asyncronously with async', async(() => {
+    const fixtureAsync = TestBed.createComponent(UserComponent);
+    const componentAsync = fixtureAsync.debugElement.componentInstance;
+    const dataService = fixtureAsync.debugElement.injector.get(DataService);
     const spy = spyOn(dataService, 'getDetails').and.returnValue(
-      Promise.resolve('Data')
+      Promise.resolve('Test Data')
     );
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(component.data).toBe('Data');
+    fixtureAsync.detectChanges();
+    fixtureAsync.whenStable().then(() => {
+      expect(componentAsync.data).toBe('Test Data');
     });
   }));
 
-  // why does fakeAsync/tick not work? - component.data is undefined
-  xit('SpyOn3: should fetch data successfully if called asyncronously', fakeAsync(() => {
-    const dataService = fixture.debugElement.injector.get(DataService);
-    const spy = spyOn(dataService, 'getDetails').and.returnValue(
-      Promise.resolve('Data')
-    );
-    fixture.detectChanges();
+  it('SpyOn3: should fetch data successfully if called asyncronously with fakeAsync', fakeAsync(() => {
+    const fixtureAsync = TestBed.createComponent(UserComponent);
+    const componentAsync = fixtureAsync.debugElement.componentInstance;
+    const dataService = fixtureAsync.debugElement.injector.get(DataService);
+    const spy = spyOn<DataService, 'getDetails'>(
+      dataService,
+      'getDetails'
+    ).and.returnValue(Promise.resolve('Test Data'));
+    fixtureAsync.detectChanges();
     tick();
-    expect(component.data).toBe('Data');
+    expect(componentAsync.data).toBe('Test Data', 'fakeAsync with spyOn');
   }));
 
   it('should fetch real data successfully if called asyncronously', async () => {

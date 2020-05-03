@@ -6,6 +6,7 @@ import { DataService } from '../shared/data.service';
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
+  providers: [UserService, DataService],
 })
 export class UserComponent implements OnInit {
   user: { name: string };
@@ -19,8 +20,6 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.userService.user;
-    this.dataService
-      .getDetails()
-      .then((resolve: string) => (this.data = resolve));
+    this.dataService.getDetails().then((data: string) => (this.data = data));
   }
 }
