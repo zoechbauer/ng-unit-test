@@ -9,6 +9,7 @@ import {
 import { UserComponent } from './user.component';
 import { UserService } from './user.service';
 import { DataService } from '../shared/data.service';
+import { ReversePipe } from '../shared/reverse.pipe';
 
 describe('UserComponent', () => {
   let component: UserComponent;
@@ -16,7 +17,7 @@ describe('UserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UserComponent],
+      declarations: [UserComponent, ReversePipe],
     }).compileComponents();
   }));
 
