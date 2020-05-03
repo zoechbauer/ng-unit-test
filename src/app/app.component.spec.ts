@@ -1,10 +1,12 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { UserComponent } from './user/user.component';
+import { ReversePipe } from './shared/reverse.pipe';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent],
+      declarations: [AppComponent, UserComponent, ReversePipe],
     }).compileComponents();
   }));
 
